@@ -4,7 +4,7 @@ warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
 This README describes two Bash shell scripts, yzoomy-menu and
 yzoomy. The scripts allow timing speeches while automatically changing
 backgrounds for Zoom (or similar) to Green, Yellow, Red at intervals.
-The yzoomy-menu script present a simple text-based menu with choices
+The yzoomy-menu script presents a simple text-based menu with choices
 of a few speech lengths suitable for contests, plus names of
 contestants.  (You will need to edit names of contestants into the
 script.)
@@ -65,11 +65,11 @@ clicked on, and elapsed time (difference between ending time and
 starting time) will display and will be written to a file if a
 contestant name has been given.
 
-Note, yzoomy moves the cursor out-of-menu-window each time it
-selects a new background image, and should return it back to the
-menu-window a few milliseconds later.  However, it's possible for
-interference to occur and you may sometimes need to move it back
-with the mouse.
+Note, yzoomy moves the cursor out of the menu window each time it
+selects a new background image, and should return it to the menu
+window a few milliseconds later.  However, it's possible for
+interference to occur and you may sometimes need to move it back with
+the mouse.
 
 
 Purpose and use of yzoomy --
@@ -81,14 +81,15 @@ Virtual Background setup box.
 
 Functions of yzoomy also can be called from the shell command line
 (instead of as choices from yzoomy-menu).  The command-line examples
-below (where <green> and <red> are numbers of minutes) illustrate (1)
-Start a timed speech, with a start line written to file; (2) end a
-speech, and write elapsed time to file; (3) start timing an interval,
-unfiled; and (4) end timing, unfiled:
- (1)       yzoomy speech <green> <red> <name-of-speaker> &
- (2)       yzoomy ending <name-of-speaker>
- (3)       yzoomy speech <green> <red> &
- (4)       yzoomy ending
+below (where <green> and <red> are numbers of minutes) illustrate:
+(1) Start a timed speech, with a start line written to file;
+(2) end a speech, and write elapsed time to file;
+(3) start timing an interval, unfiled; and
+(4) end timing, unfiled:
+  (1)       yzoomy speech <green> <red> <name-of-speaker> &
+  (2)       yzoomy ending <name-of-speaker>
+  (3)       yzoomy speech <green> <red> &
+  (4)       yzoomy ending
 
 
 Calibrating coordinates --
@@ -98,7 +99,17 @@ appropriate pictures among the choices in the Zoom Virtual Background
 setup box.
 
 Before calibrating, follow Zoom procedures for adding images, like
-G.png, Y.png, etc. to Zoom's Virtual Background setup window.
+G.png, Y.png, etc. to Zoom's Virtual Background setup window.  yzoomy
+cannot click on images that aren't on the screen.  If extra images
+push desired images out of view or make them not all visible at once,
+then change the order of images to make all necessary images visible
+at the same time.  For example, remove some extras; install desired
+images; reinstall extras if needed; finally, scroll the selector pane
+to make desired images visible.  [Note: Zoom copies images into
+~/.zoom/data/VirtualBkgnd_Custom.  It is possible there might be a way
+to change backgrounds via signals to Zoom or via file ops, but I don't
+have information on those topics, and decided to use xdotool to click
+on images.  If you find alternatives, please let me know.]
 
 In calibration, after a prompt for an item appears, you have three
 seconds to move the mouse to the item.  Change the script if you need
