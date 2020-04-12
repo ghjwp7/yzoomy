@@ -15,7 +15,8 @@ small images suitable for virtual backgrounds.  You can use these
 images, or make your own, or download larger, fancier, branded images
 from Toastmasters International at the following URL:
 <https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>
-
+It also contains club-yume-zoom, a bash shell script to put up a
+clickable yume menu that is like a gui in place of yzoomy-menu.
 
 Operational Requirements --
 yzoomy-menu depends on yzoomy for timing and image-changing functions.
