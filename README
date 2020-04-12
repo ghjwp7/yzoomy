@@ -34,8 +34,8 @@ Operation Examples --
 Start yzoomy-menu with a command like ./yzoomy-menu.  Then
 select choices by entering their numbers and pressing enter.
 
-Example 1: To select the contestant who is named in item 9 and time
-their 5-7 minute speech: Press 9, enter to select the contestant.
+Example 1: To select the contestant who is named in item 13 and time
+their 5-7 minute speech: Press 13, enter to select the contestant.
 Press 3 (Time 5-7) to select the 5-7 range.  When the speaker starts,
 press enter to start timing.  Press 1 (Stop), to have it ready; and
 when the speaker finishes, press enter to stop timing.  The starting
