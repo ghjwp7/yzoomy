@@ -9,17 +9,29 @@ of a few speech lengths suitable for contests, plus names of
 contestants.  (You will need to edit names of contestants into the
 script.)
 
+Repository Contents --
+Besides scripts yzoomy-menu and yzoomy, this repository contains seven
+small images suitable for virtual backgrounds.  You can use these
+images, or make your own, or download larger, fancier, branded images
+from Toastmasters International at the following URL:
+<https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>
+
+
+Operational Requirements --
 yzoomy-menu depends on yzoomy for timing and image-changing functions.
 In its operation, yzoomy requires a calibration file, which can be
-created using a choice from yzoomy-menu's menu.  When used with Zoom,
-yzoomy also requires that the Zoom-virtual-background-setup window
-remain visible (on top) in its calibrated location.
+created using a choice from yzoomy-menu's menu, as described later.
+When used with Zoom, yzoomy also requires that the Zoom virtual
+background setup window remain visible (on top) in its calibrated
+location during speech timing; else, mouse clicks will be ineffective.
 
-Edit the yzoomy-menu file by substituting actual names in place of
-entries like "contestant name1" ... "contestant name5".  You can
-remove extra such entries or add more, as you like.
+Creating list of names of contestants --
+Using a plain text editor, change yzoomy-menu by substituting actual
+names in place of entries like "contestant name1" ... "contestant
+name5".  You can remove extra such entries or add more, as you like.
 
-Operation: Start yzoomy-menu with a command like ./yzoomy-menu.  Then
+Operation Examples --
+Start yzoomy-menu with a command like ./yzoomy-menu.  Then
 select choices by entering their numbers and pressing enter.
 
 Example 1: To select the contestant who is named in item 9 and time
@@ -39,6 +51,17 @@ after that Anon time, subsequent times won't be filed either, until
 you do so.  You can select a name during a speech if you need to.
 Then the elapsed time will be filed.
 
+Timing Sequences --
+After you choose a speech time and start it going, the `Timing`
+picture should appear during the interval before Green appears.  When
+the Green time arrives, yzoomy uses xdotool to move the mouse cursor
+to the green image and click it, raising a green virtual background.
+It acts similarly when the Yellow or Red times arrive, if the speech
+lasts that long.  When you choose Stop, the End picture will get
+clicked on, and elapsed time (difference between ending time and
+starting time) will display and will be written to a file if a
+contestant name has been given.
+
 Note, yzoomy moves the cursor out-of-menu-window each time it
 selects a new background image, and should return it back to the
 menu-window a few milliseconds later.  However, it's possible for
@@ -47,11 +70,11 @@ with the mouse.
 
 
 Purpose and use of yzoomy --
-yzoomy provides utility functions for automatic clicking at
+From time to time the yzoomy-menu script calls functions in the yzoomy
+script: speech, ending, and CalibrateColors.  yzoomy provides those
+functions and other utility functions, to allow automatic clicking at
 appropriate times on Green, Yellow, or Red pictures in the Zoom
-Virtual Background setup box, to facilitate timing speeches during
-Toastmasters meetings.  Whenever required, the yzoomy-menu script
-calls `speech`, `ending`, and `CalibrateColors` functions of yzoomy.  
+Virtual Background setup box.
 
 Functions of yzoomy also can be called from the shell command line
 (instead of as choices from yzoomy-menu).  The command-line examples
@@ -79,18 +102,6 @@ seconds to move the mouse to the item.  Change the script if you need
 more time.  If a prompt occurs for an item you don't have or need,
 either change the script, or click on anything, or add the item; then
 recalibrate.
-
-
-Timing Sequences --
-After you choose a speech time and start its timing, the `Timing`
-picture should appear, in the interval before Green appears.  When the
-Green time arrives, yzoomy uses xdotool to move the mouse cursor to
-the green image and click it, raising a green virtual background.  It
-acts similarly when the Yellow or Red times arrive, if the speech
-lasts that long.  When you choose Stop, the End picture will get
-clicked on, and elapsed time (difference between ending time and
-starting time) will display and may be written to a file, as noted
-above.
 
 
 Other software required --

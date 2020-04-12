@@ -44,12 +44,14 @@
 
 WHO="";   TREC=/tmp/yz-timingRecord;   YZY=yzoomy
 printf '\nTo choose a menu item, type its number and press enter.\nTo redisplay the list of choices, just press enter.\n\n'
-select item in Stop "Time 1-2" "Time 5-7" "List times" "Anon 1-1" "Anon 1-2" CalibrateColors exit "contestant name1" "contestant name2"  "contestant name3" "contestant name4" "contestant name5"  ; do    
+select item in Stop "Time 1-2" "Time 5-7" "List times" "Anon 1-1" "Anon 1-2" "Click Neutral" "Click Option" CalibrateColors exit "contestant name1" "contestant name2"  "contestant name3" "contestant name4" "contestant name5"  ; do    
     if   [[ "$item" = exit ]];        then break
     elif [[ "$item" = "Anon 1-1" ]];  then WHO=''; $YZY speech 1 1 &
     elif [[ "$item" = "Anon 1-2" ]];  then WHO=''; $YZY speech 1 2 &
     elif [[ "$item" = "Time 1-2" ]];  then $YZY speech 1 2 "$WHO"  &
     elif [[ "$item" = "Time 5-7" ]];  then $YZY speech 5 7 "$WHO"  &
+    elif [[ "$item" = "Click Neutral" ]]; then $YZY click1 n
+    elif [[ "$item" = "Click Option"  ]]; then $YZY click1 o
     elif [[ "$item" = Stop ]];        then $YZY ending "$WHO"
     elif [[ "$item" = "List times" ]]; then echo; cat $TREC; echo 'You can press enter to see menu again'
     elif [[ "$item" = CalibrateColors ]];    then $YZY $item
