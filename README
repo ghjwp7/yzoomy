@@ -44,12 +44,13 @@ prompts, and will also be written to a file, which can be listed out
 by pressing 4 (List times), enter.
 
 Example 2: To time an anonymous minute for judges to work, press 5
-(Anon 1-1), enter, 1.  After the yzoomy script turns on the Red light,
-press enter to stop timing.  "Anon" start and stop times don't get
+(Anon 1-1), enter.  After the yzoomy script turns on the Red light,
+press 1, enter to stop timing.  "Anon" start and stop times don't get
 listed in the times file.  And if you don't select a contestant name
-after that Anon time, subsequent times won't be filed either, until
-you do so.  You can select a name during a speech if you need to.
-Then the elapsed time will be filed.
+after that Anon time, subsequent times won't be filed either (will
+just list on the script console) until you do so.  You can select a
+name during a speech if you need to, which will cause the elapsed time
+to be filed.
 
 Timing Sequences --
 After you choose a speech time and start it going, the `Timing`
