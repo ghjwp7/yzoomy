@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Display a menu for automatic clicking at appropriate times on Green,
+# Yellow, or Red pictures in the Zoom Virtual Background setup box.
+# jiw - April 2020
+
+# Replace "member name 1" and so forth with actual member names.
+
+# This script writes and runs a script, club-yume-zoom-menu, to
+# display a yume menu for automatic clicking at appropriate times on
+# pictures in the Zoom Virtual Background setup box.  This allows
+# easier timing of speeches during virtual (online) Toastmasters
+# meetings.  For technical details re yzoomy see README, plus comments
+# in yzoomy.  For details re yume, see <https://github.com/ghjwp7/yume3>
+
+TREC=/tmp/yz-timingRecord
+MENU=$0-menu;                   # Write menu file into same dir as $0
+TOP="yume -at 512x661-66+1370 -bu -la 'Show times' 'echo; cat $TREC' -la 'Copy times' 'cp -p $TREC ${HOME}$TREC.bak' -ex -bu -la 'Guest name' -la GName -iv guest -bu -la 'Green time' -la Green -iv 1 -la 'Red time' -la Red -iv 2 "
+function makebutton() {
+    if [[ "$BU" = '' ]]; then BU='-bu'; else BU=''; fi
+    printf " $BU -la '%s' 'yzoomy speech \$Green \$Red %s'" "$2" "$2"
+}
+# Replace "member name 1" etc with actual member names
+MID=$(mapfile -tc1 -Cmakebutton <<EOF
+member name 1
+member name 2
+member name 3
+member name 4
+member name 5
+member name 6
+member name 7
+member name 8
+EOF
+   )
+BOT=" -bu -la 'Guest Speech, G to R' 'yzoomy speech $Green $Red $GName' -bu -la '+Option' 'yzoomy click1 o' -la '  Stop  ' 'yzoomy ending \" \"' -la '+Neutral' 'yzoomy click1 n' -bu -la 'Anon 1 to 1' 'yzoomy speech 1 1' -la 'Topic, 1 to 2' 'yzoomy speech 1 2 y $GName' -la 'Eval, 2 to 3' 'yzoomy speech 2 3 y $GName'"
+
+cat >$MENU <<<"$TOP $MID $BOT"; # Write the menu script to file
+. $MENU;                        # Source & run the menu script
