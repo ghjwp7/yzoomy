@@ -1,0 +1,59 @@
+#!/bin/bash
+# By James Waldby - 11 April 2020 - Copyright © 2020 - Offered without
+# warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
+
+# A setup for timing speeches while changing backgrounds for Zoom etc
+# to Green, Yellow, Red, at appropriate intervals.  This shell script
+# present a simple text-based menu with choices of a few speech
+# lengths suitable for contests, plus names of contestants.  This menu
+# depends on the shell script yzoomy for timing and image-changing.
+# In operation, yzoomy requires a calibration file that can be created
+# using a choice from this menu.  For use with Zoom, yzoomy also
+# requires that the Zoom virtual background setup window remain
+# visible (on top) in its calibrated location.
+
+# Edit this file by substituting actual names in place of entries like
+# "contestant name1" ... "contestant name5".  You can remove extra
+# such entries or add more, as you like.
+
+# Operation: Start this script by a command like ./yzoomy-menu.  Then
+# select choices by entering their numbers and pressing enter.
+
+# Example 1: To select the contestant who is named in item 9 and time
+# their 5-7 minute speech: Press 9, enter to select the contestant.
+# Press 3 to select the 5-7 range.  When the speaker starts, press
+# enter to start timing.  Press 1, to have it ready.  When the speaker
+# finishes, press enter to stop timing.  The starting and ending times
+# for the speech will appear intermixed with menu prompts, and will
+# also be written to a file, which can be listed out by pressing 4,
+# enter.
+
+# Example 2: To time a minute for judges to work, press 5, enter, 1.
+# After the yzoomy script turns on the Red light, press enter to stop
+# timing.  "Anon" start and stop times don't get listed in the times
+# file.  And if you don't select a contestant name after that Anon
+# time, subsequent times won't be filed either, until you do so.  You
+# can select a name during a speech if you need to.  Then the elapsed
+# time will be filed.
+
+# Note, yzoomy moves the cursor out-of-menu-window each time it
+# selects a new background image, and should return it back to the
+# menu-window a few milliseconds later.  However, it's possible for
+# interference to occur and you may sometimes need to move it back
+# with the mouse.  
+
+WHO="";   TREC=/tmp/yz-timingRecord;   YZY=yzoomy
+printf '\nTo choose a menu item, type its number and press enter.\nTo redisplay the list of choices, just press enter.\n\n'
+select item in Stop "Time 1-2" "Time 5-7" "List times" "Anon 1-1" "Anon 1-2" CalibrateColors exit "contestant name1" "contestant name2"  "contestant name3" "contestant name4" "contestant name5"  ; do    
+    if   [[ "$item" = exit ]];        then break
+    elif [[ "$item" = "Anon 1-1" ]];  then WHO=''; $YZY speech 1 1 &
+    elif [[ "$item" = "Anon 1-2" ]];  then WHO=''; $YZY speech 1 2 &
+    elif [[ "$item" = "Time 1-2" ]];  then $YZY speech 1 2 "$WHO"  &
+    elif [[ "$item" = "Time 5-7" ]];  then $YZY speech 5 7 "$WHO"  &
+    elif [[ "$item" = Stop ]];        then $YZY ending "$WHO"
+    elif [[ "$item" = "List times" ]]; then echo; cat $TREC; echo 'You can press enter to see menu again'
+    elif [[ "$item" = CalibrateColors ]];    then $YZY $item
+    else WHO="$item"; echo Next contestant: $WHO
+    fi
+    sleep 0.3  # Let outputs appear before next prompt
+done

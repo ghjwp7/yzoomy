@@ -1,0 +1,103 @@
+By James Waldby - 11 April 2020 - Copyright © 2020 - Offered without
+warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
+
+This README describes two Bash shell scripts, yzoomy-menu and
+yzoomy. The scripts allow timing speeches while automatically changing
+backgrounds for Zoom (or similar) to Green, Yellow, Red at intervals.
+The yzoomy-menu script present a simple text-based menu with choices
+of a few speech lengths suitable for contests, plus names of
+contestants.  (You will need to edit names of contestants into the
+script.)
+
+yzoomy-menu depends on yzoomy for timing and image-changing functions.
+In its operation, yzoomy requires a calibration file, which can be
+created using a choice from yzoomy-menu's menu.  When used with Zoom,
+yzoomy also requires that the Zoom-virtual-background-setup window
+remain visible (on top) in its calibrated location.
+
+Edit the yzoomy-menu file by substituting actual names in place of
+entries like "contestant name1" ... "contestant name5".  You can
+remove extra such entries or add more, as you like.
+
+Operation: Start yzoomy-menu with a command like ./yzoomy-menu.  Then
+select choices by entering their numbers and pressing enter.
+
+Example 1: To select the contestant who is named in item 9 and time
+their 5-7 minute speech: Press 9, enter to select the contestant.
+Press 3 (Time 5-7) to select the 5-7 range.  When the speaker starts,
+press enter to start timing.  Press 1 (Stop), to have it ready; and
+when the speaker finishes, press enter to stop timing.  The starting
+and ending times for the speech will appear intermixed with menu
+prompts, and will also be written to a file, which can be listed out
+by pressing 4 (List times), enter.
+
+Example 2: To time an anonymous minute for judges to work, press 5
+(Anon 1-1), enter, 1.  After the yzoomy script turns on the Red light,
+press enter to stop timing.  "Anon" start and stop times don't get
+listed in the times file.  And if you don't select a contestant name
+after that Anon time, subsequent times won't be filed either, until
+you do so.  You can select a name during a speech if you need to.
+Then the elapsed time will be filed.
+
+Note, yzoomy moves the cursor out-of-menu-window each time it
+selects a new background image, and should return it back to the
+menu-window a few milliseconds later.  However, it's possible for
+interference to occur and you may sometimes need to move it back
+with the mouse.  
+
+
+Purpose and use of yzoomy --
+yzoomy provides utility functions for automatic clicking at
+appropriate times on Green, Yellow, or Red pictures in the Zoom
+Virtual Background setup box, to facilitate timing speeches during
+Toastmasters meetings.  Whenever required, the yzoomy-menu script
+calls `speech`, `ending`, and `CalibrateColors` functions of yzoomy.  
+
+Functions of yzoomy also can be called from the shell command line
+(instead of as choices from yzoomy-menu).  The command-line examples
+below (where <green> and <red> are numbers of minutes) illustrate (1)
+Start a timed speech, with a start line written to file; (2) end a
+speech, and write elapsed time to file; (3) start timing an interval,
+unfiled; and (4) end timing, unfiled:
+ (1)       yzoomy speech <green> <red> <name-of-speaker> &
+ (2)       yzoomy ending <name-of-speaker>
+ (3)       yzoomy speech <green> <red> &
+ (4)       yzoomy ending
+
+
+Calibrating coordinates --
+yzoomy provides a calibration function, CalibrateColors.  When it
+runs, it will prompt you to move the mouse cursor in turn onto
+appropriate pictures among the choices in the Zoom Virtual Background
+setup box.
+
+Before calibrating, follow Zoom procedures for adding images, like
+G.png, Y.png, etc. to Zoom's Virtual Background setup window.
+
+In calibration, after a prompt for an item appears, you have three
+seconds to move the mouse to the item.  Change the script if you need
+more time.  If a prompt occurs for an item you don't have or need,
+either change the script, or click on anything, or add the item; then
+recalibrate.
+
+
+Timing Sequences --
+After you choose a speech time and start its timing, the `Timing`
+picture should appear, in the interval before Green appears.  When the
+Green time arrives, yzoomy uses xdotool to move the mouse cursor to
+the green image and click it, raising a green virtual background.  It
+acts similarly when the Yellow or Red times arrive, if the speech
+lasts that long.  When you choose Stop, the End picture will get
+clicked on, and elapsed time (difference between ending time and
+starting time) will display and may be written to a file, as noted
+above.
+
+
+Other software required --
+These scripts uses GNU sleep for partial-second sleeps.  If your sleep
+command only has whole seconds, replace sleep 0.3333 or similar with
+sleep 1.  This script uses xdotool to get screen locations of buttons
+or images and to produce mouse clicks on those buttons or images.  If
+you don't have xdotool install it via sudo apt-get install xdotool or
+sudo yum install xdotool, or rewrite the script to use some other
+tool.

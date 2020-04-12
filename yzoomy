@@ -1,0 +1,160 @@
+#!/bin/bash
+# By James Waldby - 11 April 2020 - Copyright © 2020 - Offered without
+# warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
+
+# Utility functions for automatic clicking at appropriate times on
+# Green, Yellow, or Red pictures in the Zoom Virtual Background setup
+# box, to facilitate timing speeches during Toastmasters meetings.
+
+# The examples below (where <green> and <red> are numbers of minutes)
+# are (1) Start a timed speech, with log-to-file; (2) end a speech,
+# log-to-file; (3) start timing an interval, no log; (4) end timing,
+# no log.
+#  (1)       yzoomy speech <green> <red> <name-of-speaker> &
+#  (2)       yzoomy ending f
+#  (3)       yzoomy speech <green> <red> &
+#  (4)       yzoomy ending
+
+# For calibrating coordinates: When prompted, move the mouse cursor in
+# turn onto appropriate pictures among the choices in the Zoom Virtual
+# Background setup box.  After a prompt for an item appears, you have
+# three seconds to move the mouse to the item.  Change the script if
+# you need more time.  If a prompt occurs for an item you don't have
+# or need, either change the script, or click on anything, or add the
+# item; then recalibrate.
+
+# Timing: Click or choose a speech time to start timing.  The `Timing`
+# picture should appear, in the interval before Green, Yellow, or Red
+# appears.  When you click or choose Stop, the End picture appears and
+# the difference between ending time and starting time will display
+# and may be written to a file.
+
+# Other software required -- This script uses GNU sleep for
+# partial-second sleeps.  If your sleep command only has whole
+# seconds, replace sleep 0.3333 with sleep 1.  This script uses
+# xdotool to get screen locations of buttons and to produce mouse
+# clicks on those buttons.  If you don't have xdotool install it via
+# sudo apt-get install xdotool or sudo yum install xdotool, or rewrite
+# the script to use some other tool.
+
+CALI=/tmp/yz-timingPixAt
+START=/tmp/yz-timingStart
+TREC=/tmp/yz-timingRecord
+WHO=                      # `Who` is null by default
+
+# Load calibration data if it exists, else say to do calibration.
+[[ -f $CALI ]] && . $CALI
+[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors
+#----------------------------------------------
+function Calibrate1() {
+    echo Please move the selector to the $1 button for 3 seconds
+    sleep 3
+    # Use xdotool to get mouse x, y and write them in a script 
+    xdotool getmouselocation --shell > $START
+    # Run the script to set X, Y
+    . $START      # $START is a temporary shell script file
+    # Copy X, Y into the variables named by $2 and $3
+    caltmp=$(($2=X))
+    caltmp=$(($3=Y))
+    printf '%s=%s; %s=%s\n' $2 $X $3 $Y 
+}
+#----------------------------------------------
+function CalibrateColors() {
+    cat<<EOF
+  If you don't want to calibrate, press ctrl C now.
+
+  Prepare to move the mouse to Green, Yellow, Red, Timing, End,
+  Neutral, and Option locations when prompted.  (If you have no
+  Neutral or Option colors, leave cursor on End when they are called for.)
+
+  If you don't want to calibrate, press ctrl C now.
+  Starting calibration in 9 seconds.
+EOF
+    sleep 9
+    # Get new calibration data
+    Calibrate1 Green   GX GY
+    Calibrate1 Yellow  YX YY
+    Calibrate1 Red     RX RY
+    Calibrate1 Timing  TX TY
+    Calibrate1 End     EX EY
+    Calibrate1 Neutral NX NY
+    Calibrate1 Option  OX OY
+    # Write calibration data to file
+    printf 'GX=%s; GY=%s\n' $GX $GY  > $CALI
+    printf 'YX=%s; YY=%s\n' $YX $YY >> $CALI
+    printf 'RX=%s; RY=%s\n' $RX $RY >> $CALI
+    printf 'TX=%s; TY=%s\n' $TX $TY >> $CALI
+    printf 'EX=%s; EY=%s\n' $EX $EY >> $CALI
+    printf 'OX=%s; OY=%s\n' $OX $OY >> $CALI
+    printf 'NX=%s; NY=%s\n' $NX $NY >> $CALI
+}
+#----------------------------------------------
+function calibrate() {   # `calibrate` == `CalibrateColors`
+    CalibrateColors
+}
+#----------------------------------------------
+# clickAt has two params, x and y to click at
+function clickAt() {
+    cx=$1;  cy=$2
+    eval $(xdotool getmouselocation --shell)  # save loc in X, Y
+    xdotool mousemove $cx $cy click 1 mousemove  $X $Y
+}
+#----------------------------------------------
+# click1 has one param, a lowercase letter usually assigned as: g,
+# green; y, yellow; r, red; t, timing image; e, end image; n, neutral;
+# o, option image
+function click1() {
+    [[ "$1" = "g" ]] && clickAt $GX $GY
+    [[ "$1" = "y" ]] && clickAt $YX $YY
+    [[ "$1" = "r" ]] && clickAt $RX $RY
+    [[ "$1" = "t" ]] && clickAt $TX $TY
+    [[ "$1" = "e" ]] && clickAt $EX $EY
+    [[ "$1" = "n" ]] && clickAt $NX $NY
+    [[ "$1" = "o" ]] && clickAt $OX $OY
+}
+#----------------------------------------------
+# Call timewait with 1 params: number of seconds to wait
+function timewait() {
+    [[ -f $START ]] || exit   # Don't wait if not timing
+    entrytime=$(date +%s);  toWait=$1
+    while [[ -f $START ]]; do  # Loop until time is up or stopped
+        sleep 0.3333         
+        [[ $(($(date +%s) - $entrytime)) -ge $toWait ]] && break
+    done
+}
+#----------------------------------------------
+#  ending takes 0 or 1 parameters.  With param, write time to file.
+#  Without param, don't.
+function ending() {
+    [[ -f $START ]] || exit
+    elapsedtime=$(($(date +%s) - $(date +%s -r $START)))
+    mins=$((elapsedtime/60))
+    secs=$((elapsedtime-60*mins))
+    rm -f $START
+    printf '%s     Elapsed time:   %d:%02d  %s\n' "$(date +'%F %T')" $mins $secs "$*"
+    [[ "$1" ]] &&
+      printf '%s     Elapsed time:   %d:%02d  %s\n' "$(date +'%F %T')" $mins $secs "$*" >> $TREC
+    click1 e
+}
+#----------------------------------------------
+# Call speech with 3 params: Green-minutes, Red-minutes, name.
+function speech() {
+    rm -f $START;  Gminutes=$1;  shift
+    touch $START;  Rminutes=$1;  shift;    WHO="$*"   
+    printf '%s   Starting %s to %s timing  %s\n' "$(date +'%F %T')" $Gminutes $Rminutes "$WHO"
+    [[ "$WHO" ]] &&
+      printf '%s   Starting %s to %s timing  %s\n' "$(date +'%F %T')" $Gminutes $Rminutes "$WHO" >> $TREC
+    Gseconds=$((60*$Gminutes))
+    Rseconds=$((60*$Rminutes))
+    Yseconds=$((Gseconds/2+Rseconds/2))
+    GYdelta=$((Yseconds-Gseconds))
+    YRdelta=$((Rseconds-Yseconds))
+    click1 t;    timewait $Gseconds
+    click1 g;    timewait $GYdelta
+    click1 y;    timewait $YRdelta
+    click1 r;    timewait 7200  # 2-hour timeout
+    rm -f $START
+}
+#----------------------------------------------------
+fToRun=$1;  shift     # First param = function to run
+$fToRun $*            # Run it with other params
