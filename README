@@ -50,7 +50,7 @@ listed in the times file.  And if you don't select a contestant name
 after that Anon time, subsequent times won't be filed either (will
 just list on the script console) until you do so.  You can select a
 name during a speech if you need to, which will cause the elapsed time
-to be filed.
+to be filed when you Stop the timing.
 
 Timing Sequences --
 After you choose a speech time and start it going, the `Timing`
@@ -67,7 +67,7 @@ Note, yzoomy moves the cursor out-of-menu-window each time it
 selects a new background image, and should return it back to the
 menu-window a few milliseconds later.  However, it's possible for
 interference to occur and you may sometimes need to move it back
-with the mouse.  
+with the mouse.
 
 
 Purpose and use of yzoomy --
