@@ -130,11 +130,11 @@ function ending() {
     elapsedtime=$(($(date +%s) - $(date +%s -r $START)))
     mins=$((elapsedtime/60))
     secs=$((elapsedtime-60*mins))
+    click1 e
     rm -f $START
     printf '%s     Elapsed time:   %d:%02d  %s\n' "$(date +'%F %T')" $mins $secs "$*"
     [[ "$1" ]] &&
       printf '%s     Elapsed time:   %d:%02d  %s\n' "$(date +'%F %T')" $mins $secs "$*" >> $TREC
-    click1 e
 }
 #----------------------------------------------
 # Call speech with 3 params: Green-minutes, Red-minutes, name.
@@ -149,11 +149,12 @@ function speech() {
     Yseconds=$((Gseconds/2+Rseconds/2))
     GYdelta=$((Yseconds-Gseconds))
     YRdelta=$((Rseconds-Yseconds))
-    click1 t;    timewait $Gseconds
-    click1 g;    timewait $GYdelta
-    click1 y;    timewait $YRdelta
-    click1 r;    timewait 7200  # 2-hour timeout
-    rm -f $START
+    # Check $START to avoid a race with ending()
+    [[ -f $START ]] && click1 t;    timewait $Gseconds
+    [[ -f $START ]] && click1 g;    timewait $GYdelta
+    [[ -f $START ]] && click1 y;    timewait $YRdelta
+    [[ -f $START ]] && click1 r;    timewait 7200  # 2-hour timeout
+    rm -f $START;            # Del $START after speech is done
 }
 #----------------------------------------------------
 fToRun=$1;  shift     # First param = function to run
