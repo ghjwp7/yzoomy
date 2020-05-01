@@ -140,7 +140,7 @@ function ending() {
 # Call speech with 3 params: Green-minutes, Red-minutes, name.
 function speech() {
     rm -f $START;  Gminutes=$1;  shift
-    touch $START;  Rminutes=$1;  shift;    WHO="$*"   
+    touch $START;  Rminutes=$1;  shift;    WHO="$*" 
     printf '%s   Starting %s to %s timing  %s\n' "$(date +'%F %T')" $Gminutes $Rminutes "$WHO"
     [[ "$WHO" ]] &&
       printf '%s   Starting %s to %s timing  %s\n' "$(date +'%F %T')" $Gminutes $Rminutes "$WHO" >> $TREC
@@ -150,12 +150,21 @@ function speech() {
     GYdelta=$((Yseconds-Gseconds))
     YRdelta=$((Rseconds-Yseconds))
     # Check $START to avoid a race with ending()
-    [[ -f $START ]] && click1 t;    timewait $Gseconds
-    [[ -f $START ]] && click1 g;    timewait $GYdelta
-    [[ -f $START ]] && click1 y;    timewait $YRdelta
-    [[ -f $START ]] && click1 r;    timewait 7200  # 2-hour timeout
+    [[ -f $START ]] && click1 $TLET;    timewait $Gseconds
+    [[ -f $START ]] && click1 $GLET;    timewait $GYdelta
+    [[ -f $START ]] && click1 $YLET;    timewait $YRdelta
+    [[ -f $START ]] && click1 $RLET;    timewait 7200  # 2-hour timeout
     rm -f $START;            # Del $START after speech is done
 }
 #----------------------------------------------------
+# User should call special with 1 param: Red-minutes.  special will
+# call speech with no name and with modified color set, to skip the
+# green light at t=0 and to produce yellow at red/2.
+function special() {
+    TLET=t;GLET=t;YLET=y;RLET=r
+    speech 0 $1
+}
+#----------------------------------------------------
+TLET=t;GLET=g;YLET=y;RLET=r
 fToRun=$1;  shift     # First param = function to run
 $fToRun $*            # Run it with other params

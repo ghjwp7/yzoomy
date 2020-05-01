@@ -1,0 +1,85 @@
+#!/bin/bash
+# By James Waldby - 30 April 2020 - Copyright © 2020 - Offered without
+# warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
+
+# cczoomy provides two functions: 1) Countdown timing (a timer
+# updating every 10 seconds) and 2) Clock display on a red background.
+# These functions complement operations in yzoomy, which is a script
+# to automatically click on pictures in the Zoom Virtual Background
+# setup box.
+
+# These functions overwrite a file at path $OUUID in zoom's Custom
+# Virtual Background directory.  In this script version, OUUID is
+# hardcoded text and specifies the UUID of the image you selected as
+# `option` during calibration.  Note, zoom computes a new UUID name
+# for each background image you add.  Zoom ignores UUIDs it doesn't
+# make up itself.  Summary: When installing this script, change OUUID
+# appropriately.
+
+# During yzoomy's calibration of the 'option' image, move the mouse
+# cursor to the thumbnail for the file that is ok to overwrite within
+# .zoom's custom background directory.  Note, the thumbnail appearance
+# in the settings window updates only when you restart settings; just
+# overwriting the file won't change the thumbnail or the current
+# virtual background.  The background changes only when a thumbnail
+# other than the current thumbnail is clicked, so the countdown
+# function uses a two-click sequence after it overwrites a file.
+
+OUUID="$HOME/.zoom/data/VirtualBkgnd_Custom/{4f7cbc09-45b3-455c-92da-7f08f5deaff6}"
+GREENPATH="$HOME/nt/contest/yzoomy-timing/tG.png"
+REDPATH="$HOME/nt/contest/yzoomy-timing/tR.png"
+CALI=/tmp/yz-timingPixAt
+
+# Load calibration data if it exists, else say to do calibration.
+[[ -f $CALI ]] && . $CALI
+[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors
+#----------------------------------------------
+# Call timesho with no params.  Variable REDPATH = path to red image
+function timesho() {
+    D=$(date +'%H:%M %Z'); convert $REDPATH -font Bookman-DemiItalic -pointsize 288 -fill white -stroke green -draw "text 100,440 '$D'" time-image.png
+    cp time-image.png "$OUUID"
+    yzoomy click1 g
+    yzoomy click1 o
+}
+#----------------------------------------------
+# Call countdown with 1 param: seconds to count down from.  During
+# most of the countdown, an image is created and displayed every 10
+# seconds, with the number of seconds remaining in countdown.  During
+# the last 10 seconds, the image updates each second.  After the
+# interval, this uses timesho to show a time-stamped red image.  After
+# 6 seconds with that, goes to plain red image.
+
+# Shell variable OUUID = path into your ~/.zoom directory for the
+# image that was calibrated as the 'option' picture.  Variable
+# GREENPATH should be a path to the image you use as a green
+# background, which `convert` will create a timing-modified copy of,
+# in file time-image.png. Note, `convert` is an ImageMagick program.
+function countdown() {
+    left=$1
+    PRET=no
+    TIME=$(date +'%S')
+    ONES=${TIME: -1:1}
+    while [[ $left -gt 0 ]]; do
+        TIME=$(date +'%S')
+        if [[ $TIME != $PRET ]]; then
+            sho=n
+            [[ ${TIME: -1:1} = $ONES ]] && sho=y
+            [[ $left -lt 10 ]]  && sho=y
+            if [[ $sho = y ]]; then
+                convert $GREENPATH -font Bookman-DemiItalic -pointsize 222 -fill blue -draw "text 440,440 '$left'" time-image.png
+                cp time-image.png "$OUUID"
+                yzoomy click1 g
+                yzoomy click1 o
+            fi
+            PRET=$TIME
+            left=$((left-1))
+        fi
+        sleep 0.2
+    done
+    timesho
+    sleep 6
+    yzoomy click1 r
+}
+#----------------------------------------------------
+fToRun=$1;  shift     # First param = function to run
+$fToRun $*            # Run it with other params
