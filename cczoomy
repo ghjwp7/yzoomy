@@ -12,15 +12,14 @@
 # number of seconds, b) Show current time & timezone on red
 # background, c-e) Create smaller, annotated versions tG.png, tY.png,
 # tR.png of TI-supplied color backgrounds.  Note, in c-e, replace the
-# indicated filenames with actual filenames when you run the commands.
+# shorthand-indicated color-filenames with actual filenames when you
+# run the commands.
 
 # a)      cczoomy countdown 60
 # b)      cczoomy timesho
 # c)      cczoomy annotate G  green-filename
 # d)      cczoomy annotate Y  yellow-filename
 # e)      cczoomy annotate R  red-filename
-
-# [use full TI file names in place of ti-green, yellow, red]
 
 # The countdown and timesho functions overwrite a file at path $OUUID
 # in zoom's Custom Virtual Background directory.  In this script
