@@ -8,6 +8,20 @@
 # operations in yzoomy, which is a script to automatically click on
 # pictures in the Zoom Virtual Background setup box.
 
+# Here are five examples of function usage, to a) Countdown specified
+# number of seconds, b) Show current time & timezone on red
+# background, c-e) Create smaller, annotated versions tG.png, tY.png,
+# tR.png of TI-supplied color backgrounds.  Note, in c-e, replace the
+# indicated filenames with actual filenames when you run the commands.
+
+# a)      cczoomy countdown 60
+# b)      cczoomy timesho
+# c)      cczoomy annotate G  green-filename
+# d)      cczoomy annotate Y  yellow-filename
+# e)      cczoomy annotate R  red-filename
+
+# [use full TI file names in place of ti-green, yellow, red]
+
 # The countdown and timesho functions overwrite a file at path $OUUID
 # in zoom's Custom Virtual Background directory.  In this script
 # version, OUUID is hardcoded text and specifies the UUID of the image
@@ -24,16 +38,6 @@
 # virtual background.  The background changes only when a thumbnail
 # other than the current thumbnail is clicked, so the countdown
 # function uses a two-click sequence after it overwrites a file.
-
-# The `annotate` function works ok with images from
-# <https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>
-# which are 3840x2160 in spite of "1920x1080" appearing within the
-# file names.  See example below.  Use the annotate function 3 times
-# to create green, yellow, and red images suitably sized for use with
-# countdown and timesho.  For example, `cczoomy annotate G ti-green`
-# and `cczoomy annotate Y ti-yellow` and `cczoomy annotate R ti-red`,
-# substituting lengthy TI file names in place of ti-green, ti-yellow,
-# ti-red.
 
 OUUID="$HOME/.zoom/data/VirtualBkgnd_Custom/{4f7cbc09-45b3-455c-92da-7f08f5deaff6}"
 GREENPATH="$HOME/nt/contest/yzoomy-timing/tG.png"
@@ -52,13 +56,19 @@ function timesho() {
     yzoomy click1 o
 }
 #----------------------------------------------
-# Add large annotation letters to TI-supplied image.  Call annotate
-# with 2 params: 1, letter G, Y, or R; 2, filename of TI-supplied
-# image.  For example: `cczoomy annotate G
+
+# The `annotate` function works ok with images from
+# <https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>
+# which are 3840x2160 in spite of "1920x1080" appearing within the
+# file names.  Use this function 3 times (as shown in earlier function
+# usage examples) to create green, yellow, and red images suitably
+# sized and annotated for use with countdown and timesho.  Example:
+# `cczoomy annotate G
 # en-toastmasters-TA662D-toastmasters-zoom-virtual-wordmark-bk-timer-green-1920x1080-c1.jpg`
-# will convert that image (which is 3840x2160 pixels) to half size,
-# with G annotations left and right, and output into the file tG.png
-# (as suitable for specification into countdown or timesho).
+# will copy that image to file tG.png.  The input .jpg image is
+# 3840x2160 pixels (for April 2020 TI files).  The .png output will be
+# half size -- suitable for use with countdown or timesho -- and will
+# have large-letter annotations left and right.
 function annotate() {
     convert $2  -resize 50% -font Bookman-Light -pointsize 488 -fill black -stroke white -draw "text 140,840 $1" -draw "text 1450,840 $1" t${1}.png
     ls -l t${1}.png
