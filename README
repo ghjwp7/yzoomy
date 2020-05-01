@@ -2,22 +2,20 @@ By James Waldby - 11 April 2020 - Copyright © 2020 - Offered without
 warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
 
 This README describes some Bash shell scripts, yzoomy-menu, yzoomy,
-and cczoomy. The scripts allow timing speeches while automatically
-changing backgrounds for Zoom (or similar) to Green, Yellow, Red at
-intervals.  The yzoomy-menu script presents a simple text-based menu
-with choices of a few speech lengths suitable for contests, plus names
-of contestants.  (You will need to edit names of contestants into the
-script.)  The cczoomy script provides countdown, timesho, and annotate
-functions.
+club-yume-zoom, and cczoomy. The scripts allow timing speeches while
+automatically changing backgrounds for Zoom (or similar) to Green,
+Yellow, Red at intervals.  The yzoomy-menu script presents a simple
+text-based menu with choices of a few speech lengths suitable for
+contests, plus names of contestants.  (You will need to edit names of
+contestants into the script.)  The cczoomy script provides countdown,
+timesho, and annotate functions.  The club-yume-zoom script makes a
+clickable yume menu; eg see image menu-cyz.png.
 
 Repository Contents -- Besides the scripts, this repository contains a
 number of small images suitable for virtual backgrounds.  You can use
 these images, or make your own, or download larger, fancier, branded
 images from Toastmasters International at the following URL:
-<https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>. It
-also contains club-yume-zoom, a bash shell script to put up a
-clickable yume menu that is like a gui in place of yzoomy-menu.  The
-image menu-cyz.png shows what such a menu looks like.
+<https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>.
 
 Operational Requirements --
 yzoomy-menu depends on yzoomy for timing and image-changing functions.
@@ -27,10 +25,10 @@ When used with Zoom, yzoomy also requires that the Zoom virtual
 background setup window remain visible (on top) in its calibrated
 location during speech timing; else, mouse clicks will be ineffective.
 
-Creating list of names of contestants --
-Using a plain text editor, change yzoomy-menu by substituting actual
-names in place of entries like "contestant name1" ... "contestant
-name5".  You can remove extra such entries or add more, as you like.
+Adding names of contestants --
+Using a plain-text editor, change yzoomy-menu or club-yume-zoom by
+substituting actual names in place of "contestant name1" etc.  You can
+remove extra such entries or add more, as you like.
 
 Operation Examples --
 Start yzoomy-menu with a command like ./yzoomy-menu.  Then
@@ -59,11 +57,11 @@ After you choose a speech time and start it going, the `Timing`
 picture should appear during the interval before Green appears.  When
 the Green time arrives, yzoomy uses xdotool to move the mouse cursor
 to the green image and click it, raising a green virtual background.
-It acts similarly when the Yellow or Red times arrive, if the speech
-lasts that long.  When you choose Stop, the End picture will get
-clicked on, and elapsed time (difference between ending time and
-starting time) will display and will be written to a file if a
-contestant name has been given.
+It acts similarly when Yellow or Red times arrive, if the speech lasts
+that long.  When you choose Stop, the End picture will get clicked on,
+and elapsed time (difference between ending time and starting time)
+will display and will be written to a file if a contestant name has
+been given.
 
 Note, yzoomy moves the cursor out of the menu window each time it
 selects a new background image, and should return it to the menu
@@ -80,12 +78,13 @@ Virtual Background setup box.
 
 Functions of yzoomy also can be called from the shell command line
 (instead of as choices from yzoomy-menu).  The command-line examples
-below (where <green> and <red> are numbers of minutes) illustrate:
+below (where <green> and <red> are numbers of minutes) illustrate five
+things:  
 (1) Start a timed speech, with a start line written to file;
 (2) end a speech, and write elapsed time to file;
 (3) start timing an interval, unfiled;
 (4) end timing, unfiled; and
-(5) start a 60-second countdown timer that updates each 10 seconds:
+(5) start a 60-second countdown timer that updates each 10 seconds
 
   (1)       yzoomy speech <green> <red> <name-of-speaker> &
   (2)       yzoomy ending <name-of-speaker>
