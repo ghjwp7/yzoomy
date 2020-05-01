@@ -21,27 +21,30 @@
 # d)      cczoomy annotate Y  yellow-filename
 # e)      cczoomy annotate R  red-filename
 
-# The countdown and timesho functions overwrite a file at path $OUUID
-# in zoom's Custom Virtual Background directory.  In this script
-# version, OUUID is hardcoded text and specifies the UUID of the image
-# you selected as `option` during calibration.  Note, zoom computes a
-# new UUID name for each background image you add.  Zoom ignores UUIDs
-# it doesn't make up itself.  Summary: When installing this script,
-# change OUUID appropriately.
+# The countdown and timesho functions overwrite a file in zoom's
+# Custom Virtual Background directory.  For this script version, the
+# most-recently-changed file in zoom's custom background directory is
+# presumed to be the option file.  Before you use this script, either
+# go into your .zoom/data/VirtualBkgnd_Custom directory and touch the
+# proper file, or in the Settings / Virtual Background window, remove
+# and add the option image after any other images, and then if
+# necessary recalibrate yzoomy.
 
 # During yzoomy's calibration of the 'option' image, move the mouse
-# cursor to the thumbnail for the file that is ok to overwrite within
-# .zoom's custom background directory.  Note, the thumbnail appearance
-# in the settings window updates only when you restart settings; just
-# overwriting the file won't change the thumbnail or the current
-# virtual background.  The background changes only when a thumbnail
-# other than the current thumbnail is clicked, so the countdown
-# function uses a two-click sequence after it overwrites a file.
+# cursor to the thumbnail for a file that is ok to overwrite within
+# .zoom's custom background directory, which as noted above should be
+# the last-added file.  Note, the thumbnail appearance in the settings
+# window updates only when you restart settings; just overwriting the
+# file won't change the thumbnail or the current virtual background.
+# The background changes only when a thumbnail other than the current
+# thumbnail is clicked, so the countdown function uses a two-click
+# sequence after it overwrites a file.
 
-OUUID="$HOME/.zoom/data/VirtualBkgnd_Custom/{4f7cbc09-45b3-455c-92da-7f08f5deaff6}"
 GREENPATH="$HOME/nt/contest/yzoomy-timing/tG.png"
 REDPATH="$HOME/nt/contest/yzoomy-timing/tR.png"
 CALI=/tmp/yz-timingPixAt
+ZVBC="$HOME/.zoom/data/VirtualBkgnd_Custom/"
+OUUID="${ZVBC}$(ls -t $ZVBC | head -1)"
 
 # Load calibration data if it exists, else say to do calibration.
 [[ -f $CALI ]] && . $CALI
@@ -76,7 +79,7 @@ function annotate() {
 # Call countdown with 1 param: seconds to count down from.  During
 # most of the countdown, an image is created and displayed every 10
 # seconds, with the number of seconds remaining in countdown.  During
-# the last 10 seconds, the image updates each second.  After the
+# the last few seconds, the image updates each second.  After the
 # interval, this uses timesho to show a time-stamped red image.  After
 # 6 seconds with that, goes to plain red image.
 
@@ -95,7 +98,7 @@ function countdown() {
         if [[ $TIME != $PRET ]]; then
             sho=n
             [[ ${TIME: -1:1} = $ONES ]] && sho=y
-            [[ $left -lt 10 ]]  && sho=y
+            [[ $left -lt 6 ]]  && sho=y
             if [[ $sho = y ]]; then
                 convert $GREENPATH -font Bookman-DemiItalic -pointsize 222 -fill blue -draw "text 440,440 '$left'" time-image.png
                 cp time-image.png "$OUUID"

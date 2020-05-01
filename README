@@ -1,23 +1,23 @@
 By James Waldby - 11 April 2020 - Copyright © 2020 - Offered without
 warranty under GPL v3 terms as at http://www.gnu.org/licenses/gpl.html
 
-This README describes two Bash shell scripts, yzoomy-menu and
-yzoomy. The scripts allow timing speeches while automatically changing
-backgrounds for Zoom (or similar) to Green, Yellow, Red at intervals.
-The yzoomy-menu script presents a simple text-based menu with choices
-of a few speech lengths suitable for contests, plus names of
-contestants.  (You will need to edit names of contestants into the
-script.)
+This README describes some Bash shell scripts, yzoomy-menu, yzoomy,
+and cczoomy. The scripts allow timing speeches while automatically
+changing backgrounds for Zoom (or similar) to Green, Yellow, Red at
+intervals.  The yzoomy-menu script presents a simple text-based menu
+with choices of a few speech lengths suitable for contests, plus names
+of contestants.  (You will need to edit names of contestants into the
+script.)  The cczoomy script provides countdown, timesho, and annotate
+functions.
 
-Repository Contents --
-Besides scripts yzoomy-menu and yzoomy, this repository contains seven
-small images suitable for virtual backgrounds.  You can use these
-images, or make your own, or download larger, fancier, branded images
-from Toastmasters International at the following URL:
-<https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>
-It also contains club-yume-zoom, a bash shell script to put up a
-clickable yume menu that is like a gui in place of yzoomy-menu.
-The image menu-cyz.png shows what such a menu looks like.
+Repository Contents -- Besides the scripts, this repository contains a
+number of small images suitable for virtual backgrounds.  You can use
+these images, or make your own, or download larger, fancier, branded
+images from Toastmasters International at the following URL:
+<https://www.toastmasters.org/resources/Timer%20Zoom%20Backgrounds>. It
+also contains club-yume-zoom, a bash shell script to put up a
+clickable yume menu that is like a gui in place of yzoomy-menu.  The
+image menu-cyz.png shows what such a menu looks like.
 
 Operational Requirements --
 yzoomy-menu depends on yzoomy for timing and image-changing functions.
@@ -71,7 +71,6 @@ window a few milliseconds later.  However, it's possible for
 interference to occur and you may sometimes need to move it back with
 the mouse.
 
-
 Purpose and use of yzoomy --
 From time to time the yzoomy-menu script calls functions in the yzoomy
 script: speech, ending, and CalibrateColors.  yzoomy provides those
@@ -84,13 +83,15 @@ Functions of yzoomy also can be called from the shell command line
 below (where <green> and <red> are numbers of minutes) illustrate:
 (1) Start a timed speech, with a start line written to file;
 (2) end a speech, and write elapsed time to file;
-(3) start timing an interval, unfiled; and
-(4) end timing, unfiled:
+(3) start timing an interval, unfiled;
+(4) end timing, unfiled; and
+(5) start a 60-second countdown timer that updates each 10 seconds:
+
   (1)       yzoomy speech <green> <red> <name-of-speaker> &
   (2)       yzoomy ending <name-of-speaker>
   (3)       yzoomy speech <green> <red> &
   (4)       yzoomy ending
-
+  (5)       cczoomy countdown 60
 
 Calibrating coordinates --
 yzoomy provides a calibration function, CalibrateColors.  When it
@@ -106,16 +107,19 @@ then change the order of images to make all necessary images visible
 at the same time.  For example, remove some extras; install desired
 images; reinstall extras if needed; finally, scroll the selector pane
 to make desired images visible.  [Note: Zoom copies images into
-~/.zoom/data/VirtualBkgnd_Custom.  It is possible there might be a way
-to change backgrounds via signals to Zoom or via file ops, but I don't
-have information on those topics, and decided to use xdotool to click
-on images.  If you find alternatives, please let me know.]
+~/.zoom/data/VirtualBkgnd_Custom and makes up its own arbitrary
+UUID-formatted names for the files.  The cczoomy script assumes the
+most recent file in that directory is the option file and also assumes
+it is ok to Overwrite the most recent file whenever it likes.]  Note,
+if you find better alternatives for operations used in these scripts,
+please let me know.
 
 In calibration, after a prompt for an item appears, you have three
 seconds to move the mouse to the item.  Change the script if you need
 more time.  If a prompt occurs for an item you don't have or need,
 either change the script, or click on anything, or add the item; then
-recalibrate.
+recalibrate.  If you intend to use the cczoomy script, select a
+don't-care image as an overwritable `option` background.
 
 
 Other software required --
