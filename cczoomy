@@ -100,7 +100,8 @@ function countdown() {
             [[ ${TIME: -1:1} = $ONES ]] && sho=y
             [[ $left -lt 6 ]]  && sho=y
             if [[ $sho = y ]]; then
-                convert $GREENPATH -font Bookman-DemiItalic -pointsize 222 -fill blue -draw "text 440,440 '$left'" time-image.png
+                hhmm=$(printf "%d:%02d" $((left/60)) $((left%60)))
+                convert $GREENPATH -font Bookman-DemiItalic -pointsize 222 -fill blue -draw "text 440,440 '$hhmm'" time-image.png
                 cp time-image.png "$OUUID"
                 yzoomy click1 g
                 yzoomy click1 o
