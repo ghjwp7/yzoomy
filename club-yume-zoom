@@ -20,19 +20,19 @@ function makebutton() {
     if [[ "$BU" = '' ]]; then BU='-bu'; else BU=''; fi
     printf " $BU -la '%s' 'yzoomy speech \$Green \$Red %s'" "$2" "$2"
 }
-# Replace "member name 1" etc with actual member names
+# Replace "name1" etc with actual member names
 MID=$(mapfile -tc1 -Cmakebutton <<EOF
-member name 1
-member name 2
-member name 3
-member name 4
-member name 5
-member name 6
-member name 7
-member name 8
+name1
+name2
+name3
+name4
+name5
+name6
+name7
+name8
 EOF
    )
-BOT=" -bu -la 'Guest Speech, G to R' 'yzoomy speech $Green $Red $GName' -bu -la '+Option' 'yzoomy click1 o' -la '  Stop  ' 'yzoomy ending end' -la '+Neutral' 'yzoomy click1 n' -bu -la 'Anon 1 to 1' 'yzoomy speech 1 1' -la 'Topic, 1 to 2' 'yzoomy speech 1 2 y $GName' -la 'Eval, 2 to 3' 'yzoomy speech 2 3 y $GName'"
+BOT=" -bu -la 'Time Mark' 'cczoomy timesho' -la 'Guest Speech, G to R' 'yzoomy speech \$Green \$Red \$GName' -bu -la '+Option' 'yzoomy click1 o' -la '  Stop  ' 'yzoomy ending end' -la '+Neutral' 'yzoomy click1 n' -bu -la 'Countdown 60' 'cczoomy countdown 60' -la 'Countdown 120' 'cczoomy countdown 120' -la 'Topic, 1 to 2' 'yzoomy speech 1 2 \$GName' -la 'Eval, 2 to 3' 'yzoomy speech 2 3 \$GName'"
 
 cat >$MENU <<<"$TOP $MID $BOT"; # Write the menu script to file
 . $MENU;                        # Source & run the menu script

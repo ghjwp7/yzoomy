@@ -44,7 +44,7 @@ WHO=                      # `Who` is null by default
 
 # Load calibration data if it exists, else say to do calibration.
 [[ -f $CALI ]] && . $CALI
-[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors
+[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors or perhaps cp /home/j-waldby/src/tst/bash/yzoomy/yz-timingPixAt /tmp
 #----------------------------------------------
 function Calibrate1() {
     echo Please move the selector to the $1 button for 3 seconds
@@ -97,7 +97,7 @@ function calibrate() {   # `calibrate` == `CalibrateColors`
 function clickAt() {
     cx=$1;  cy=$2
     eval $(xdotool getmouselocation --shell)  # save loc in X, Y
-    xdotool mousemove $cx $cy click 1 mousemove  $X $Y
+    xdotool mousemove --sync $cx $cy click 1 mousemove  $X $Y
 }
 #----------------------------------------------
 # click1 has one param, a lowercase letter usually assigned as: g,

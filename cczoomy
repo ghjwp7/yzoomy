@@ -44,18 +44,25 @@ GREENPATH="$HOME/nt/contest/yzoomy-timing/tG.png"
 REDPATH="$HOME/nt/contest/yzoomy-timing/tR.png"
 CALI=/tmp/yz-timingPixAt
 ZVBC="$HOME/.zoom/data/VirtualBkgnd_Custom/"
+# Get path to  most-recent file in zoom's virtual backgrounds directory
+# (Files in that directory have arbitrary non-computable UUID's)
 OUUID="${ZVBC}$(ls -t $ZVBC | head -1)"
 
 # Load calibration data if it exists, else say to do calibration.
 [[ -f $CALI ]] && . $CALI
-[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors
+[[ -f $CALI ]] || echo No calibration file found -- You Should Run CalibrateColors or perhaps cp /home/j-waldby/src/tst/bash/yzoomy/yz-timingPixAt /tmp
 #----------------------------------------------
 # Call timesho with no params.  Variable REDPATH = path to red image
 function timesho() {
+    # Make time-image.png in current directory
     D=$(date +'%H:%M %Z'); convert $REDPATH -font Bookman-DemiItalic -pointsize 288 -fill white -stroke green -draw "text 100,440 '$D'" time-image.png
+    # Copy time-image.png onto zoom's most-recent UUID'd file
     cp time-image.png "$OUUID"
+    # Click something other than o (else background won't change)
     yzoomy click1 g
+    # Click o to display the UUID'd copy of time-image.png
     yzoomy click1 o
+    echo $D
 }
 #----------------------------------------------
 
